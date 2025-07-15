@@ -1,7 +1,15 @@
 package edu.fbansept.m2i2.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import edu.fbansept.m2i2.dao.UtilisateurDao;
+import edu.fbansept.m2i2.model.Produit;
 import edu.fbansept.m2i2.model.Utilisateur;
+import edu.fbansept.m2i2.view.VendeurView;
+import edu.fbansept.m2i2.view.VendeurWithEmailView;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,17 +21,20 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/utilisateur")
+@Tag(name = "CRUD utilisateur", description = "Permet de manipuler l'entité utilisateur")
 public class UtilisateurController {
 
     @Autowired
     protected UtilisateurDao utilisateurDao;
 
     @GetMapping("/liste")
+    @JsonView(VendeurView.class)
     public List<Utilisateur> getAll() {
         return utilisateurDao.findAll();
     }
 
     @GetMapping("/{id}")
+    @JsonView(VendeurWithEmailView.class)
     public ResponseEntity<Utilisateur> get(@PathVariable int id) {
 
         Optional<Utilisateur> utilisateurOptional = utilisateurDao.findById(id);
@@ -37,6 +48,14 @@ public class UtilisateurController {
     }
 
     @PostMapping
+    @Operation(
+            summary = "Permet de persister un utilisateur",
+            description = "Enregistre dans la base de donnée un utilisateur issu du JSON intégré au corp de la requête")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "L'utilisateur a été ajouté avec succès"),
+            @ApiResponse(responseCode = "409", description = "L'opération a échouée car l'email est en doublon, ou le role absent"),
+            @ApiResponse(responseCode = "400", description = "L'email ou le mot de passe est vide ou absent"),
+    })
     public ResponseEntity<Utilisateur> add(
             @RequestBody @Validated(Utilisateur.add.class) Utilisateur utilisateurEnvoye) {
 

@@ -1,7 +1,9 @@
 package edu.fbansept.m2i2.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import edu.fbansept.m2i2.dao.ProduitDao;
 import edu.fbansept.m2i2.model.Produit;
+import edu.fbansept.m2i2.view.ProduitView;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,11 +21,13 @@ public class ProduitController {
     protected ProduitDao produitDao;
 
     @GetMapping("/liste")
+    @JsonView(ProduitView.class)
     public List<Produit> getAll() {
         return produitDao.findAll();
     }
 
     @GetMapping("/{id}")
+    @JsonView(ProduitView.class)
     public ResponseEntity<Produit> get(@PathVariable int id) {
 
         Optional<Produit> produitOptional = produitDao.findById(id);
@@ -37,6 +41,7 @@ public class ProduitController {
     }
 
     @PostMapping
+    @JsonView(ProduitView.class)
     public ResponseEntity<Produit> add(
             @RequestBody @Valid Produit produitEnvoye) {
 
@@ -62,6 +67,7 @@ public class ProduitController {
     }
 
     @PutMapping("/{id}")
+    @JsonView(ProduitView.class)
     public ResponseEntity<?> update(
             @PathVariable int id,
             @RequestBody @Valid Produit produitEnvoye) {
