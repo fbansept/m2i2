@@ -26,8 +26,6 @@ public class Utilisateur {
 
     @Column(nullable = false, unique = true)
     @NotBlank(groups = {add.class, update.class})
-    @Email(groups = {add.class, update.class})
-
     @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
             groups = {add.class, update.class},
             message = "L'email est mal formé")
@@ -36,5 +34,8 @@ public class Utilisateur {
     @Column(nullable = false)
     @NotBlank(groups = {add.class})
     protected String password;
+
+    @ManyToOne(optional = false)
+    protected Role role;
 
 }

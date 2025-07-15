@@ -1,9 +1,9 @@
 ```toml
 name = 'add'
 method = 'POST'
-url = 'http://localhost:8080/api/utilisateur'
+url = 'http://localhost:8080/api/produit'
 sortWeight = 3000000
-id = '248bf198-4852-45a3-87ff-d833b9fea2f5'
+id = '64c7213e-92aa-4210-b4f3-2c5bbdf8f50c'
 
 [body]
 type = 'JSON'
