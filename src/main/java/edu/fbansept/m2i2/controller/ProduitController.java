@@ -3,6 +3,7 @@ package edu.fbansept.m2i2.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import edu.fbansept.m2i2.dao.ProduitDao;
 import edu.fbansept.m2i2.model.Produit;
+import edu.fbansept.m2i2.security.IsVendeur;
 import edu.fbansept.m2i2.view.ProduitView;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ public class ProduitController {
 
     @PostMapping
     @JsonView(ProduitView.class)
+    @IsVendeur
     public ResponseEntity<Produit> add(
             @RequestBody @Valid Produit produitEnvoye) {
 
@@ -52,6 +54,7 @@ public class ProduitController {
     }
 
     @DeleteMapping("/{id}")
+    @IsVendeur
     public ResponseEntity<?> delete(@PathVariable int id) {
 
         Optional<Produit> produitOptional = produitDao.findById(id);
@@ -68,6 +71,7 @@ public class ProduitController {
 
     @PutMapping("/{id}")
     @JsonView(ProduitView.class)
+    @IsVendeur
     public ResponseEntity<?> update(
             @PathVariable int id,
             @RequestBody @Valid Produit produitEnvoye) {

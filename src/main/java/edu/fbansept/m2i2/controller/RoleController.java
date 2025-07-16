@@ -2,6 +2,7 @@ package edu.fbansept.m2i2.controller;
 
 import edu.fbansept.m2i2.dao.RoleDao;
 import edu.fbansept.m2i2.model.Role;
+import edu.fbansept.m2i2.security.IsAdministrateur;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/role")
+@IsAdministrateur
 public class RoleController {
 
     @Autowired

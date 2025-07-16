@@ -15,5 +15,14 @@ public class JwtUtils {
                 .compact();
 
     }
+    
+    public String extractSubject(String jwt) {
+        
+        return Jwts.parser()
+                .setSigningKey("azerty")
+                .parseClaimsJws(jwt)
+                .getBody()
+                .getSubject();
+    }
 
 }

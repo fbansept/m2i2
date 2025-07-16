@@ -3,6 +3,8 @@ package edu.fbansept.m2i2.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import edu.fbansept.m2i2.dao.EtiquetteDao;
 import edu.fbansept.m2i2.model.Etiquette;
+import edu.fbansept.m2i2.security.IsAdministrateur;
+import edu.fbansept.m2i2.security.IsVendeur;
 import edu.fbansept.m2i2.view.EtiquetteView;
 import edu.fbansept.m2i2.view.ProduitView;
 import jakarta.validation.Valid;
@@ -41,6 +43,7 @@ public class EtiquetteController {
     }
 
     @PostMapping
+    @IsAdministrateur
     public ResponseEntity<Etiquette> add(
             @RequestBody @Valid Etiquette etiquetteEnvoye) {
 
@@ -51,6 +54,7 @@ public class EtiquetteController {
     }
 
     @DeleteMapping("/{id}")
+    @IsAdministrateur
     public ResponseEntity<?> delete(@PathVariable int id) {
 
         Optional<Etiquette> etiquetteOptional = etiquetteDao.findById(id);
@@ -66,6 +70,7 @@ public class EtiquetteController {
     }
 
     @PutMapping("/{id}")
+    @IsAdministrateur
     public ResponseEntity<?> update(
             @PathVariable int id,
             @RequestBody @Valid Etiquette etiquetteEnvoye) {

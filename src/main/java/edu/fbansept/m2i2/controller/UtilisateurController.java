@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 import edu.fbansept.m2i2.dao.UtilisateurDao;
 import edu.fbansept.m2i2.model.Produit;
 import edu.fbansept.m2i2.model.Utilisateur;
+import edu.fbansept.m2i2.security.IsAdministrateur;
+import edu.fbansept.m2i2.security.IsVendeur;
 import edu.fbansept.m2i2.view.VendeurView;
 import edu.fbansept.m2i2.view.VendeurWithEmailView;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,11 +26,12 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/utilisateur")
 @Tag(name = "CRUD utilisateur", description = "Permet de manipuler l'entité utilisateur")
+@IsAdministrateur
 public class UtilisateurController {
 
     @Autowired
     protected UtilisateurDao utilisateurDao;
-    
+
     @Autowired
     protected PasswordEncoder passwordEncoder;
 
@@ -65,7 +68,7 @@ public class UtilisateurController {
             @RequestBody @Validated(Utilisateur.add.class) Utilisateur utilisateurEnvoye) {
 
         utilisateurEnvoye.setPassword(passwordEncoder.encode(utilisateurEnvoye.getPassword()));
-        
+
         utilisateurDao.save(utilisateurEnvoye);
 
         return new ResponseEntity<>(utilisateurEnvoye, HttpStatus.CREATED);
