@@ -11,6 +11,9 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -34,6 +37,12 @@ public class Produit {
     @ManyToOne
     @JsonView(ProduitView.class)
     protected Utilisateur vendeur;
+
+    @ManyToMany
+    @JoinTable(
+            name = "etiquette_produit",
+            inverseJoinColumns = @JoinColumn(name = "etiquette_id"))
+    protected List<Etiquette> etiquettes = new ArrayList<>();
 
 }
 
