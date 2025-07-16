@@ -3,12 +3,14 @@ package edu.fbansept.m2i2.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import edu.fbansept.m2i2.dao.ProduitDao;
 import edu.fbansept.m2i2.model.Produit;
+import edu.fbansept.m2i2.security.AppUserDetails;
 import edu.fbansept.m2i2.security.IsVendeur;
 import edu.fbansept.m2i2.view.ProduitView;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -55,12 +57,24 @@ public class ProduitController {
 
     @DeleteMapping("/{id}")
     @IsVendeur
-    public ResponseEntity<?> delete(@PathVariable int id) {
+    public ResponseEntity<?> delete(
+            @PathVariable int id,
+            @AuthenticationPrincipal AppUserDetails userDetails
+    ) {
 
         Optional<Produit> produitOptional = produitDao.findById(id);
 
         if(produitOptional.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        boolean estAdmin = userDetails.getUtilisateur().getRole().getNom().equals("ADMINISTRATEUR");
+        boolean estProprietaire = produitOptional.get().getVendeur() != null && produitOptional.get().getVendeur().getId() ==
+                userDetails.getUtilisateur().getId();
+
+        //si la personne connectée n'est ni administrateur ni le vendeur du produit
+        if(!estAdmin && !estProprietaire) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
         produitDao.deleteById(id);
@@ -74,7 +88,8 @@ public class ProduitController {
     @IsVendeur
     public ResponseEntity<?> update(
             @PathVariable int id,
-            @RequestBody @Valid Produit produitEnvoye) {
+            @RequestBody @Valid Produit produitEnvoye,
+            @AuthenticationPrincipal AppUserDetails userDetails) {
 
         produitEnvoye.setId(id);
 
@@ -83,7 +98,16 @@ public class ProduitController {
         if(produitOptional.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        
+
+        boolean estAdmin = userDetails.getUtilisateur().getRole().getNom().equals("ADMINISTRATEUR");
+        boolean estProprietaire = produitOptional.get().getVendeur() != null && produitOptional.get().getVendeur().getId() ==
+                userDetails.getUtilisateur().getId();
+
+        //si la personne connectée n'est ni administrateur ni le vendeur du produit
+        if(!estAdmin && !estProprietaire) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
         produitDao.save(produitEnvoye);
 
         return new ResponseEntity<>(produitEnvoye, HttpStatus.OK);
