@@ -14,6 +14,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +28,9 @@ public class UtilisateurController {
 
     @Autowired
     protected UtilisateurDao utilisateurDao;
+    
+    @Autowired
+    protected PasswordEncoder passwordEncoder;
 
     @GetMapping("/liste")
     @JsonView(VendeurView.class)
@@ -59,6 +64,8 @@ public class UtilisateurController {
     public ResponseEntity<Utilisateur> add(
             @RequestBody @Validated(Utilisateur.add.class) Utilisateur utilisateurEnvoye) {
 
+        utilisateurEnvoye.setPassword(passwordEncoder.encode(utilisateurEnvoye.getPassword()));
+        
         utilisateurDao.save(utilisateurEnvoye);
 
         return new ResponseEntity<>(utilisateurEnvoye, HttpStatus.CREATED);
