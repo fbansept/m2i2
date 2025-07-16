@@ -20,8 +20,15 @@ import java.util.Optional;
 @RequestMapping("/api/produit")
 public class ProduitController {
 
-    @Autowired
+//    @Autowired
+//    protected ProduitDao produitDao;
+
     protected ProduitDao produitDao;
+
+    @Autowired
+    public ProduitController(ProduitDao produitDao) {
+        this.produitDao = produitDao;
+    }
 
     @GetMapping("/liste")
     @JsonView(ProduitView.class)
