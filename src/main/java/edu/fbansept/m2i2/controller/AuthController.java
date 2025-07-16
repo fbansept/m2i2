@@ -3,6 +3,8 @@ package edu.fbansept.m2i2.controller;
 import edu.fbansept.m2i2.dao.UtilisateurDao;
 import edu.fbansept.m2i2.model.Role;
 import edu.fbansept.m2i2.model.Utilisateur;
+import edu.fbansept.m2i2.security.AppUserDetails;
+import edu.fbansept.m2i2.security.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,9 @@ public class AuthController {
     @Autowired
     protected AuthenticationProvider authenticationProvider;
 
+    @Autowired
+    protected JwtUtils jwtUtils;
+
     @PostMapping("/inscription")
     public ResponseEntity<Utilisateur> inscription(@RequestBody Utilisateur utilisateur) {
 
@@ -46,12 +51,14 @@ public class AuthController {
     public ResponseEntity<String> connexion(@RequestBody Utilisateur utilisateur) {
 
         try {
-            authenticationProvider.authenticate(
+            AppUserDetails userDetails = (AppUserDetails) authenticationProvider.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             utilisateur.getEmail(), utilisateur.getPassword()
-                    ));
+                    )).getPrincipal();
 
-            return ResponseEntity.ok("le futur JWT");
+            String jwt = jwtUtils.generateToken(userDetails);
+
+            return ResponseEntity.ok(jwt);
 
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
