@@ -3,7 +3,7 @@ name = 'add'
 method = 'POST'
 url = 'http://localhost:8080/api/produit'
 sortWeight = 3000000
-id = '64c7213e-92aa-4210-b4f3-2c5bbdf8f50c'
+id = '199d3387-f02a-4b14-880b-1fd55cd688b1'
 
 [body]
 type = 'JSON'
@@ -15,7 +15,7 @@ raw = '''
     "id" : 2
   },
   etiquettes : [
-    { id :  1}, { i :  2}
+    { id :  1}, { id :  2}
   ]
 }'''
 ```

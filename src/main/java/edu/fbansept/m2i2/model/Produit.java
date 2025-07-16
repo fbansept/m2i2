@@ -3,6 +3,7 @@ package edu.fbansept.m2i2.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonView;
+import edu.fbansept.m2i2.view.EtiquetteView;
 import edu.fbansept.m2i2.view.ProduitView;
 import edu.fbansept.m2i2.view.VendeurView;
 import jakarta.persistence.*;
@@ -26,7 +27,7 @@ public class Produit {
 
     @NotBlank
     @Column(unique=true , nullable=false)
-    @JsonView({VendeurView.class, ProduitView.class})
+    @JsonView({VendeurView.class, ProduitView.class, EtiquetteView.class})
     protected String nom;
 
     @DecimalMin(value = "0.01")
@@ -41,7 +42,9 @@ public class Produit {
     @ManyToMany
     @JoinTable(
             name = "etiquette_produit",
+            joinColumns = @JoinColumn(name = "produit_id"),
             inverseJoinColumns = @JoinColumn(name = "etiquette_id"))
+    @JsonView(ProduitView.class)
     protected List<Etiquette> etiquettes = new ArrayList<>();
 
 }

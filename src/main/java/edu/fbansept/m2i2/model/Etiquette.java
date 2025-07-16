@@ -1,5 +1,8 @@
 package edu.fbansept.m2i2.model;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import edu.fbansept.m2i2.view.EtiquetteView;
+import edu.fbansept.m2i2.view.ProduitView;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -16,9 +19,12 @@ public class Etiquette {
 
     @NotBlank
     @Column(unique=true , nullable=false)
+    @JsonView({ProduitView.class,EtiquetteView.class})
     protected String nom;
 
-
+//    @ManyToMany(mappedBy = "etiquettes")
+//    @JsonView(EtiquetteView.class)
+//    protected List<Produit> produits;
 
 }
 

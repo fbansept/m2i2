@@ -1,7 +1,10 @@
 package edu.fbansept.m2i2.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import edu.fbansept.m2i2.dao.EtiquetteDao;
 import edu.fbansept.m2i2.model.Etiquette;
+import edu.fbansept.m2i2.view.EtiquetteView;
+import edu.fbansept.m2i2.view.ProduitView;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +27,7 @@ public class EtiquetteController {
     }
 
     @GetMapping("/{id}")
+    @JsonView(EtiquetteView.class)
     public ResponseEntity<Etiquette> get(@PathVariable int id) {
 
         Optional<Etiquette> etiquetteOptional = etiquetteDao.findById(id);
